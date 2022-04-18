@@ -12,6 +12,8 @@ import androidx.compose.material.Icon
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.runtime.*
@@ -22,6 +24,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberImagePainter
 import coil.transform.CircleCropTransformation
+import com.example.lessonproject.viewmodel.FavoritesViewModel
 import com.example.testapp.models.Movie
 import com.example.testapp.models.getMovies
 
@@ -34,6 +37,7 @@ fun MovieRow(
     var more by remember {
         mutableStateOf(false)
     }
+
 
     Card(
         modifier = Modifier
@@ -86,21 +90,56 @@ fun MovieRow(
                     }
                 }
             }
+            FavoriteMovie(favoritesViewModel = FavoritesViewModel())
         }
     }
 }
+
 
 @Composable
 fun HorizontalMovieImageGallery(movie: Movie = getMovies()[0]) {
     LazyRow {
         items(movie.images) { image ->
             Card(
-                modifier = Modifier.padding(12.dp).size(240.dp),
+                modifier = Modifier
+                    .padding(12.dp)
+                    .size(240.dp),
                 elevation = 4.dp
             ) {
-                Image(painter = rememberImagePainter(data = image),
-                    contentDescription = "Movie image")
+                Image(
+                    painter = rememberImagePainter(data = image),
+                    contentDescription = "Movie image"
+                )
             }
+        }
+    }
+}
+
+@Composable
+fun FavoriteMovie(favoritesViewModel: FavoritesViewModel, movie: Movie = getMovies()[0]) {
+    var saveToFavorites by remember {
+        mutableStateOf(false)
+    }
+    Column {
+        if (!saveToFavorites) {
+            Icon(
+                modifier = Modifier
+                    .clickable(onClick = { saveToFavorites = !saveToFavorites }),
+                imageVector = Icons.Default.FavoriteBorder,
+                contentDescription = "No Favorite"
+
+            )
+            favoritesViewModel.removeFromFavorites(movie)
+
+        } else {
+            Icon(
+                modifier = Modifier
+                    .clickable(onClick = { saveToFavorites = false }),
+                imageVector = Icons.Filled.Favorite,
+                contentDescription = "Favorite"
+            )
+            favoritesViewModel.addToFavorites(movie)
+
         }
     }
 }

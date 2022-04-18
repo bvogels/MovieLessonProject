@@ -15,8 +15,10 @@ import com.example.testapp.models.Movie
 import com.example.testapp.models.getMovies
 
 @Composable
-fun DetailScreen(navController: NavController = rememberNavController(),
-    movieID : String? = "tt0499549") {
+fun DetailScreen(
+    navController: NavController = rememberNavController(),
+    movieID: String? = "tt0499549"
+) {
 
     val movie = filterMovie(movieID = movieID)
 
