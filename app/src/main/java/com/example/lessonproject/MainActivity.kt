@@ -13,8 +13,6 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val movies = getMovies()
-        val vm : FavoritesViewModel by viewModels()
 
         setContent {
             MyApp()

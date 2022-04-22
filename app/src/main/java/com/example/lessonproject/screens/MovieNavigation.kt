@@ -21,9 +21,9 @@ fun MovieNavigation() {
             })
         ) { backStackEntry ->
             DetailScreen(
-                navController = navController, movieID = backStackEntry.arguments?.getString("movie")
+                navController = navController, movieID = backStackEntry.arguments?.getString("movie"), favoritesViewModel
             )}
-        composable(MovieScreens.FavoritesScreen.name) { Favorites(navController = navController) }
+        composable(MovieScreens.FavoritesScreen.name) { Favorites(navController = navController, favoritesViewModel) }
 
     }
 }

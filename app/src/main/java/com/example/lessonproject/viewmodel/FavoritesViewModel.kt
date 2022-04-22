@@ -6,22 +6,22 @@ import com.example.testapp.models.Movie
 
 class FavoritesViewModel : ViewModel() {
 
-    private val _favoriteMovies = mutableStateListOf<Movie>()
-    val favoriteMovies: List<Movie>
-        get() = _favoriteMovies
+    var favoriteMovies = mutableStateListOf<Movie>()
 
     fun addToFavorites(movie: Movie) {
-        if (!exists(movie = movie)) {
-            _favoriteMovies.add(movie)
+        if (movie in favoriteMovies) {
+            favoriteMovies.remove(movie)
+        } else {
+            favoriteMovies.add(movie)
         }
     }
 
-    fun removeFromFavorites(movie: Movie) {
-        _favoriteMovies.remove(movie)
+    fun getFavorites(): List<Movie> {
+        return favoriteMovies
     }
 
     private fun exists(movie: Movie) : Boolean {
-        return _favoriteMovies.any {m -> m.id == movie.id}
+        return favoriteMovies.any {m -> m.id == movie.id}
     }
 
     fun isFavorite(movie: Movie) : Boolean {

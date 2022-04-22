@@ -19,6 +19,7 @@ import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -32,7 +33,8 @@ import com.example.testapp.models.getMovies
 @Composable
 fun MovieRow(
     movie: Movie = getMovies()[0],
-    onItemClick: (String) -> Unit = {}
+    onItemClick: (String) -> Unit = {},
+    content: @Composable () -> Unit = {}
 ) {
     var more by remember {
         mutableStateOf(false)
@@ -90,7 +92,7 @@ fun MovieRow(
                     }
                 }
             }
-            FavoriteMovie(favoritesViewModel = FavoritesViewModel())
+            content()
         }
     }
 }
@@ -116,30 +118,25 @@ fun HorizontalMovieImageGallery(movie: Movie = getMovies()[0]) {
 }
 
 @Composable
-fun FavoriteMovie(favoritesViewModel: FavoritesViewModel, movie: Movie = getMovies()[0]) {
+fun FavoriteMovie(
+    movie: Movie,
+    isFavorite: Boolean,
+    onClickDelete: (Movie) -> Unit = {}
+) {
     var saveToFavorites by remember {
-        mutableStateOf(false)
+        mutableStateOf(isFavorite)
     }
-    Column {
-        if (!saveToFavorites) {
-            Icon(
-                modifier = Modifier
-                    .clickable(onClick = { saveToFavorites = !saveToFavorites }),
-                imageVector = Icons.Default.FavoriteBorder,
-                contentDescription = "No Favorite"
-
-            )
-            favoritesViewModel.removeFromFavorites(movie)
-
+    Icon(
+        imageVector = if (saveToFavorites) {
+            Icons.Default.Favorite
         } else {
-            Icon(
-                modifier = Modifier
-                    .clickable(onClick = { saveToFavorites = false }),
-                imageVector = Icons.Filled.Favorite,
-                contentDescription = "Favorite"
-            )
-            favoritesViewModel.addToFavorites(movie)
-
-        }
-    }
+            Icons.Default.FavoriteBorder
+        },
+        contentDescription = "Favorite",
+        modifier = Modifier.clickable {
+            onClickDelete(movie)
+            saveToFavorites = !saveToFavorites
+        },
+        tint = Color.Cyan
+    )
 }
